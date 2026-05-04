@@ -1,0 +1,83 @@
+##
+## Peninsular Malaysia — Location definitions
+## Grid operator: TNB (Tenaga Nasional Berhad)
+## Installed capacity (2024): ~26,152 MW
+## Peak demand (2024): ~20,500 MW
+## Mix: coal 49%, gas 42%, hydro 5%, solar 5%
+##
+## Modelled as single copper-plate node for national planning
+##
+
+locations:
+
+  peninsular:
+    coordinates: {lat: 3.8, lon: 109.5}
+    available_area: 1.0e6        # km2 (placeholder for land constraints)
+    techs:
+
+      ## Demand
+      demand_electricity: {}  # Uses resource=file=demand.csv from tech definition
+
+      ## Existing coal fleet (to be retired per schedule)
+      coal_existing:
+        constraints:
+          energy_cap_max: 12800  # MW — 49% of 26,152 MW (retirement via override per milestone year)
+          energy_cap_min: 12800  # Locked at full capacity in base year; lowered by override
+
+      ## Existing gas (CCGT)
+      gas_ccgt:
+        constraints:
+          energy_cap_min: 10980  # MW existing — 42% of 26,152 MW
+
+      ## New gas CCGT (expandable)
+      # Uses same tech, capacity_min = existing fleet; new investment on top
+
+      ## Gas OCGT peaker
+      gas_ocgt:
+        constraints:
+          energy_cap_min: 1000   # Existing peakers
+          energy_cap_max: 5000   # Expansion headroom
+
+      ## Large hydro (existing dams: Kenyir, Pergau, Temenggor etc.)
+      hydro_large_existing:
+        constraints:
+          energy_cap_max: 1300  # MW hydro — ~5% of mix
+          energy_cap_min: 1300  # Fixed existing capacity
+
+      ## Run-of-river hydro (new small hydro)
+      hydro_ror:
+        constraints:
+          energy_cap_max: 1000
+
+      ## Utility solar PV (LSS programme)
+      solar_utility:
+        constraints:
+          energy_cap_max: 40000  # Up to 40 GW utility solar by 2050 (NETR high-solar vision)
+
+      ## Rooftop solar (NEM — Net Energy Metering)
+      solar_rooftop:
+        constraints:
+          energy_cap_max: 5000   # 5 GW rooftop potential
+
+      ## Onshore wind (limited — Malaysia has low wind speeds, coastal areas only)
+      wind_onshore:
+        constraints:
+          energy_cap_max: 500    # 500 MW ceiling (low CF ~15-20%)
+
+      ## Biomass (palm oil waste, EFB etc.)
+      biomass_plant:
+        constraints:
+          energy_cap_max: 2000   # 2 GW biomass ceiling
+
+      ## New coal (restricted post-2030, zero by default)
+      coal_new:
+        constraints:
+          energy_cap_max: 0      # No new coal in baseline; overrideable in scenarios
+
+      ## Battery storage
+      battery_storage:
+        constraints:
+          energy_cap_max: 10000  # Up to 10 GW battery
+
+## No intra-Peninsular links needed (copper plate)
+## No HVDC to Sabah/Sarawak (grids are physically isolated)

@@ -1,0 +1,29 @@
+##
+## Storage technology definitions
+## Li-ion battery — 4-hour duration default
+##
+
+techs:
+
+  battery_storage:
+    essentials:
+      name: 'Li-ion battery storage (4h)'
+      color: '#9c27b0'
+      parent: storage
+      carrier: electricity
+    constraints:
+      energy_eff: 0.92           # One-way efficiency; round-trip ~85%
+      storage_loss: 0.0002       # Self-discharge per hour (~0.5%/day)
+      energy_cap_max: inf
+      storage_cap_max: inf
+      charge_rate: 1.0            # C-rate: can charge/discharge at 1C
+      lifetime: 15
+      # Enforce 4-hour duration ratio (storage_cap = 4 * energy_cap)
+      energy_cap_per_storage_cap_min: 0.25   # min 4h duration
+      energy_cap_per_storage_cap_max: 0.25   # max 4h duration (fixed ratio)
+    costs:
+      monetary:
+        interest_rate: 0.07
+        energy_cap: 200000       # 200 USD/kW power capacity
+        storage_cap: 150000      # 150 USD/kWh storage capacity (IRENA 2023)
+        om_annual: 6000          # 6 USD/kW/yr fixed O&M

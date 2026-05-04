@@ -1,0 +1,87 @@
+##
+## Sabah — Location definitions
+## Grid operator: SESB (Sabah Electricity Sdn Bhd)
+## Installed capacity (2024): ~1,500 MW
+## Peak demand (2024): ~1,200 MW
+## Mix: gas >80%, hydro ~4% (102 MW), solar growing
+## No coal (policy: no coal plants planned)
+##
+
+locations:
+
+  sabah:
+    coordinates: {lat: 5.9, lon: 116.1}
+    techs:
+
+      ## Demand
+      demand_electricity: {}
+
+      ## Gas CCGT (existing + expansion)
+      gas_ccgt:
+        constraints:
+          energy_cap_min: 900    # MW existing gas
+          energy_cap_max: 3000   # Expansion headroom to 2050
+
+      ## Gas OCGT peaker
+      gas_ocgt:
+        constraints:
+          energy_cap_min: 300
+          energy_cap_max: 1000
+
+      ## Diesel (remote areas, emergency)
+      diesel_genset:
+        constraints:
+          energy_cap_min: 150
+          energy_cap_max: 150    # Hold at current level; phase out over time via retire scenario
+
+      ## Existing hydro (Babagon, Liwagu, Telekosang ~140 MW total)
+      hydro_large_existing:
+        constraints:
+          energy_cap_max: 140
+          energy_cap_min: 140  # Fixed existing capacity
+
+      ## New run-of-river hydro
+      hydro_ror:
+        constraints:
+          energy_cap_max: 500    # 500 MW potential in Sabah rivers
+
+      ## Utility solar PV (LSS programme)
+      solar_utility:
+        constraints:
+          energy_cap_max: 3000   # 3 GW utility solar
+
+      ## Rooftop solar
+      solar_rooftop:
+        constraints:
+          energy_cap_max: 500
+
+      ## Onshore wind (coastal Sabah, some potential)
+      wind_onshore:
+        constraints:
+          energy_cap_max: 300
+
+      ## Biomass (palm oil waste)
+      biomass_plant:
+        constraints:
+          energy_cap_max: 300
+
+      ## No coal (policy constraint)
+      coal_existing:
+        constraints:
+          energy_cap_max: 0
+      coal_new:
+        constraints:
+          energy_cap_max: 0
+
+      ## Battery storage
+      battery_storage:
+        constraints:
+          energy_cap_max: 1500
+
+## Sabah-Sarawak HVDC link defined in links section below
+links:
+  sabah,sarawak:
+    techs:
+      hvdc_sabah_sarawak:
+        constraints:
+          energy_cap_max: 0      # Unlocked in 2035+ runs via override/scenario

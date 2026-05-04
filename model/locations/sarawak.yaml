@@ -1,0 +1,75 @@
+##
+## Sarawak — Location definitions
+## Grid operator: Sarawak Energy Berhad (SEB)
+## Installed capacity (2024): ~5,745 MW
+## Peak demand (2024): ~3,200 MW
+## Mix: hydro 62% (Bakun 2400MW + Murum 944MW + Batang Ai 108MW),
+##       gas 21%, coal 16%, others <1%
+## Ambition: 10 GW by 2030, 15 GW RE by 2035
+##
+
+locations:
+
+  sarawak:
+    coordinates: {lat: 2.5, lon: 113.0}
+    techs:
+
+      ## Demand
+      demand_electricity: {}
+
+      ## Large hydro — existing (must-run with seasonal CF)
+      hydro_large_existing:
+        constraints:
+          energy_cap_max: 3452  # Bakun (2400) + Murum (944) + Batang Ai (108)
+          energy_cap_min: 3452  # Fixed existing capacity
+
+      ## New large hydro (Baleh 1,285 MW under construction; additional sites)
+      hydro_ror:
+        constraints:
+          energy_cap_min: 1285   # Baleh dam (expected online ~2026-2028)
+          energy_cap_max: 6000   # Additional hydro potential (Baram, Limbang etc.)
+
+      ## Gas CCGT (existing + expansion)
+      gas_ccgt:
+        constraints:
+          energy_cap_min: 1200   # ~21% of 5745 MW
+          energy_cap_max: 4000
+
+      ## Existing coal (Sejingkat, Balingian etc.) — retirement schedule applied
+      coal_existing:
+        constraints:
+          energy_cap_max: 920  # ~16% of 5745 MW (retirement via override per milestone year)
+          energy_cap_min: 920  # Locked at full capacity in base year; lowered by override
+
+      ## No new coal in baseline
+      coal_new:
+        constraints:
+          energy_cap_max: 0
+
+      ## Utility solar PV (high irradiance in Sarawak)
+      solar_utility:
+        constraints:
+          energy_cap_max: 10000  # Abundant land, 10 GW ceiling
+
+      ## Rooftop solar
+      solar_rooftop:
+        constraints:
+          energy_cap_max: 1000
+
+      ## Diesel (remote rural)
+      diesel_genset:
+        constraints:
+          energy_cap_min: 100
+          energy_cap_max: 100
+
+      ## Battery storage
+      battery_storage:
+        constraints:
+          energy_cap_max: 5000
+
+      ## No wind (inland Sarawak, very low wind speeds)
+      wind_onshore:
+        constraints:
+          energy_cap_max: 0
+
+## HVDC link defined in Sabah location file (sabah,sarawak)
